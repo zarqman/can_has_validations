@@ -1,0 +1,9 @@
+en:
+  errors:
+    messages:
+      invalid_email: "is an invalid email"
+      invalid_url: "is an invalid URL"
+      unchangeable: "cannot be changed"
+      before: "must be before %{attribute2}"
+      after: "must be after %{attribute2}"
+      

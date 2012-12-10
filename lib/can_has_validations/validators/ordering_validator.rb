@@ -1,24 +1,58 @@
 # Attribute ordering
 #   Ensures one value is greater or lesser than another (set of) value(s).
 #   Always skips over nil values; use :presence to validate those.
-# eg: validates :start_at, :ordering=>{:before => :finish_at }
-#     validates :finish_at, :ordering=>{:after => [:start_at, :alt_start_at] }
+# eg: validates :start_at, :before=>:finish_at
+#     validates :start_at, :before=>{:value_of=>:finish_at, :if=>... }
+#     validates :finish_at, :after => [:start_at, :alt_start_at]
+#     validates :finish_at, :after=>{:values_of => [:start_at, :alt_start_at], :if=>... }
 
-class OrderingValidator < ActiveModel::EachValidator
-  def validate_each(record, attribute, value)
-    Array(options[:before]).each do |attr_name|
-      greater = record.send attr_name
-      next unless value && greater
-      unless value < greater
-        record.errors[attribute] << (options[:message] || "must be before #{record.class.human_attribute_name attr_name}")
-      end
-    end
-    Array(options[:after]).each do |attr_name|
-      lesser = record.send attr_name
-      next unless value && lesser
-      unless value > lesser
-        record.errors[attribute] << (options[:message] || "must be after #{record.class.human_attribute_name attr_name}")
+module ActiveModel::Validations
+  class BeforeValidator < ActiveModel::EachValidator
+    def validate_each(record, attribute, value)
+      compare_to = Array(options[:value_of] || options[:values_of] || options[:in] || options[:with])
+      compare_to.each do |attr_name|
+        greater = record.send attr_name
+        next unless value && greater
+        unless value < greater
+          attr2 = record.class.human_attribute_name attr_name
+          record.errors.add(attribute, :before, options.except(:before).merge!(:attribute2=>attr2))
+        end
       end
     end
   end
+  class AfterValidator < ActiveModel::EachValidator
+    def validate_each(record, attribute, value)
+      compare_to = Array(options[:value_of] || options[:values_of] || options[:in] || options[:with])
+      compare_to.each do |attr_name|
+        lesser = record.send attr_name
+        next unless value && lesser
+        unless value > lesser
+          attr2 = record.class.human_attribute_name attr_name
+          record.errors.add(attribute, :after, options.except(:after).merge!(:attribute2=>attr2))
+        end
+      end
+    end
+  end
+  # class OrderingValidator < ActiveModel::EachValidator
+  #   def validate_each(record, attribute, value)
+  #     Array(options[:before]).each do |attr_name|
+  #       greater = record.send attr_name
+  #       next unless value && greater
+  #       unless value < greater
+  #         attr2 = record.class.human_attribute_name attr_name
+  #         record.errors.add(attribute, :before, options.except(:before).merge!(:attribute2=>attr2))
+  #         # record.errors[attribute] << (options[:message] || :before"must be before #{record.class.human_attribute_name attr_name}")
+  #       end
+  #     end
+  #     Array(options[:after]).each do |attr_name|
+  #       lesser = record.send attr_name
+  #       next unless value && lesser
+  #       unless value > lesser
+  #         attr2 = record.class.human_attribute_name attr_name
+  #         record.errors.add(attribute, :after, options.except(:after).merge!(:attribute2=>attr2))
+  #         # record.errors[attribute] << (options[:message] || :after"must be after #{record.class.human_attribute_name attr_name}")
+  #       end
+  #     end
+  #   end
+  # end
 end

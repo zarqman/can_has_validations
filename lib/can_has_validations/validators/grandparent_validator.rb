@@ -4,16 +4,20 @@
 # eg: validates :user, :grandparent=>{:scope=>:org, :parent=>:realm}
 #     validates :user, :grantparent=>{:scope=>[:phone, :address], :parent=>:account_id}
 
-class GrandparentValidator < ActiveModel::EachValidator
-  def validate_each(record, attribute, association)
-    all_match = Array(options[:scope]).all? do |scope|
-      cousin = record.send(scope)
-      if cousin.nil?
-        options[:allow_nil]
-      else
-        association.send(options[:parent]) == cousin.send(options[:parent])
+module ActiveModel::Validations
+  class GrandparentValidator < ActiveModel::EachValidator
+    def validate_each(record, attribute, association)
+      all_match = Array(options[:scope]).all? do |scope|
+        cousin = record.send(scope)
+        if cousin.nil?
+          options[:allow_nil]
+        else
+          association.send(options[:parent]) == cousin.send(options[:parent])
+        end
+      end
+      unless all_match
+        record.errors.add(attribute, :invalid, options.except(:allow_nil, :parent, :scope))
       end
     end
-    record.errors[attribute] << (options[:message] || "is invalid") unless all_match
   end
 end
