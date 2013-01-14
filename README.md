@@ -18,7 +18,16 @@ All validators use the newer Rails 3 syntax:
 (That is, there's not a validates_email_of :some_attribute helper.)
 
 
-## Email ##
+## Installation ##
+
+Add it to your `Gemfile`:
+
+    gem 'can_has_validations'
+
+
+
+
+## Email validator ##
 
 Ensures an attribute is generally formatted as an email. It uses a basic regex
 that's designed to match something that looks like an email. It allows for any
@@ -27,7 +36,7 @@ TLD, so as to not fail as ICANN continues to add TLDs.
     validates :user_email, :email=>true
 
 
-## Grandparent ##
+## Grandparent validator ##
 
 Ensures two (or more) associations share a common parent value. 
 
@@ -77,7 +86,7 @@ or the database foreign key (`:user_id`). You can also use any other field. The
 test is merely that they match, not that they are associations.
 
 
-## Ordering ##
+## Ordering validators ##
 
 Ensures two attribute values maintain a relative order to one another. This is
 often useful when two date or range values. Validations can be written using
@@ -95,7 +104,7 @@ Always skips over nil values; use `:presence` to validate those.
     validates :finish_at, :after => {:values_of => [:start_at, :alt_start_at], :if=>... }
 
 
-## URL ##
+## URL validator ##
 
 Ensure an attribute is generally formatted as a URL. If `addressable/uri` is
 already loaded, it will be used to parse IDN's.
@@ -106,8 +115,12 @@ already loaded, it will be used to parse IDN's.
     require 'addressable/uri'
     validates :website, :url=>true
 
+    # Or, as part of your Gemfile:
+    gem 'addressable', :require=>'addressable/uri'
+    gem 'can_has_validations'
 
-## Write Once ##
+
+## Write Once validator ##
 
 Ensure that once a value is written, it becomes readonly. There are two uses
 for this. 
