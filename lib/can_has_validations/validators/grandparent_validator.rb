@@ -2,7 +2,7 @@
 #   :allow_nil will not only allow the attribute/association to be nil, but
 #     also any of the :scope's.
 # eg: validates :user, :grandparent=>{:scope=>:org, :parent=>:realm}
-#     validates :user, :grantparent=>{:scope=>[:phone, :address], :parent=>:account_id}
+#     validates :user, :grandparent=>{:scope=>[:phone, :address], :parent=>:account_id}
 
 module ActiveModel::Validations
   class GrandparentValidator < ActiveModel::EachValidator

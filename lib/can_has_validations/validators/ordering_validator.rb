@@ -33,26 +33,4 @@ module ActiveModel::Validations
       end
     end
   end
-  # class OrderingValidator < ActiveModel::EachValidator
-  #   def validate_each(record, attribute, value)
-  #     Array(options[:before]).each do |attr_name|
-  #       greater = record.send attr_name
-  #       next unless value && greater
-  #       unless value < greater
-  #         attr2 = record.class.human_attribute_name attr_name
-  #         record.errors.add(attribute, :before, options.except(:before).merge!(:attribute2=>attr2))
-  #         # record.errors[attribute] << (options[:message] || :before"must be before #{record.class.human_attribute_name attr_name}")
-  #       end
-  #     end
-  #     Array(options[:after]).each do |attr_name|
-  #       lesser = record.send attr_name
-  #       next unless value && lesser
-  #       unless value > lesser
-  #         attr2 = record.class.human_attribute_name attr_name
-  #         record.errors.add(attribute, :after, options.except(:after).merge!(:attribute2=>attr2))
-  #         # record.errors[attribute] << (options[:message] || :after"must be after #{record.class.human_attribute_name attr_name}")
-  #       end
-  #     end
-  #   end
-  # end
 end
