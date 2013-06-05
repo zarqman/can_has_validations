@@ -8,4 +8,4 @@ test/dummy/.sass-cache
 *.tmproj
 .rvmrc
 *.gem
-
+Gemfile.lock
