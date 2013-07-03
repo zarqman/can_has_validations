@@ -14,7 +14,7 @@ Validations provided:
 
 All validators use the newer Rails 3 syntax:
 
-    validates :some_attribute, :email=>true
+    validates :some_attribute, email: true
 
 (That is, there's not a validates_email_of :some_attribute helper.)
 
@@ -34,7 +34,7 @@ Ensures an attribute is generally formatted as an email. It uses a basic regex
 that's designed to match something that looks like an email. It allows for any
 TLD, so as to not fail as ICANN continues to add TLDs.
 
-    validates :user_email, :email=>true
+    validates :user_email, email: true
 
 
 ## Existence validator ##
@@ -57,7 +57,7 @@ so this is useful with Mongoid as well.
 
 Ensures two (or more) associations share a common parent value. 
 
-`:allow_nil=>true` will not only allow the attribute/association to be nil, but
+`allow_nil: true` will not only allow the attribute/association to be nil, but
 also any of the `:scope` values.
 
 Consider a model tree like this:
@@ -81,7 +81,7 @@ Consider a model tree like this:
       belongs_to :address
       belongs_to :phone
       
-      validates :phone, :grandparent=>{:scope=>:address, :parent=>:user}
+      validates :phone, grandparent: {scope: :address, parent: :user}
     end
 
 For any `Order`, this ensures that both `:address` and `:phone` belong to the same
@@ -89,7 +89,7 @@ For any `Order`, this ensures that both `:address` and `:phone` belong to the sa
 
 Basically it starts with the attribute being validated (`:phone` in this case)
 and the scoped attributes (just `:address` in this case, but you can supply an
-array if needed, eg: `:scope=>[:billing_address, :mailing_address]` ). 
+array if needed, eg: `scope: [:billing_address, :mailing_address]` ). 
 
 Then, it looks for the attribute that is the common parent (`:user` in the above
 example). So, it's looking for `phone.user` and `address.user`. 
@@ -112,13 +112,13 @@ either `:before` or `:after` to make them readable.
 Always skips over nil values; use `:presence` to validate those.
 
     # Short versions:
-    validates :start_at, :before => :finish_at
-    validates :finish_at, :after => [:start_at, :alt_start_at]
-    validates :start_at, :presence => true, :before => :finish_at
+    validates :start_at, before: :finish_at
+    validates :finish_at, after: [:start_at, :alt_start_at]
+    validates :start_at, presence: true, before: :finish_at
     
     # Long versions, if you need to add extra validation options:
-    validates :start_at, :before => {:value_of => :finish_at, :message=>"..." }
-    validates :finish_at, :after => {:values_of => [:start_at, :alt_start_at], :if=>... }
+    validates :start_at, before: {value_of: :finish_at, message: "..." }
+    validates :finish_at, after: {values_of: [:start_at, :alt_start_at], if: ... }
 
 
 ## URL validator ##
@@ -126,14 +126,14 @@ Always skips over nil values; use `:presence` to validate those.
 Ensure an attribute is generally formatted as a URL. If `addressable/uri` is
 already loaded, it will be used to parse IDN's.
 
-    validates :website, :url=>true
+    validates :website, url: true
 
     # With IDN parsing:
     require 'addressable/uri'
-    validates :website, :url=>true
+    validates :website, url: true
 
     # Or, as part of your Gemfile:
-    gem 'addressable', :require=>'addressable/uri'
+    gem 'addressable', require: 'addressable/uri'
     gem 'can_has_validations'
 
 
@@ -146,14 +146,14 @@ The first is as an equivalent to `attr_readonly :user_id` except that it also
 produces a validation error instead of silently ignoring the change as
 `attr_readonly` does.
 
-    validates :user_id, :presence=>true, :write_once=>true
+    validates :user_id, presence: true, write_once: true
 
 The second use is to allow an attribute to be nil when the record is first
 created and allow it to be set once at some arbitrary point in the future, but
 once set, still make it immutable. A WORM (write once, read many) attribute of
 sorts.
 
-    validates :user_id, :write_once=>true
+    validates :user_id, write_once: true
 
 
 ## Error messages
