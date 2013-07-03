@@ -6,6 +6,7 @@ ActiveModel.
 Validations provided:
 
 * Email
+* Existence
 * Grandparent
 * Ordering
 * URL
@@ -34,6 +35,22 @@ that's designed to match something that looks like an email. It allows for any
 TLD, so as to not fail as ICANN continues to add TLDs.
 
     validates :user_email, :email=>true
+
+
+## Existence validator ##
+
+Rails 4 changed the default behavior of the Presence validator. In Rails 3.x,
+it always validated presence, even if `allow_nil: true` or `allow_blank: true`
+was set. The Rails 4 Presence validator now acts on `allow_nil` and
+`allow_blank`, which makes it semi-useless.
+
+The Existence validator restores the previous behavior (but with a new name to
+avoid any potential conflicts).
+
+Mongoid 3 and 4 also exhibit the same behavior as Rails 4, even under Rails 3,
+so this is useful with Mongoid as well.
+
+    validates :name, presence: true
 
 
 ## Grandparent validator ##

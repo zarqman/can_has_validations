@@ -1,4 +1,4 @@
-%w(email grandparent ordering url write_once).each do |validator|
+%w(email existence grandparent ordering url write_once).each do |validator|
   require "can_has_validations/validators/#{validator}_validator"
 end
 
