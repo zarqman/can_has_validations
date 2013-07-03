@@ -10,13 +10,13 @@ Gem::Specification.new do |s|
   s.authors     = ["thomas morgan"]
   s.email       = ["tm@iprog.com"]
   s.homepage    = "https://github.com/zarqman/can_has_validations"
-  s.summary     = "Assorted Rails 3 validators"
-  s.description = "Assorted Rails 3 validators."
+  s.summary     = "Assorted Rails 3.x-4.x validators"
+  s.description = "Assorted Rails 3.x-4.x validators."
 
   s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.md"]
   s.test_files = Dir["test/**/*"]
 
-  s.add_dependency "rails", ">= 3.2.0", "< 5.0"
+  s.add_dependency "rails", ">= 3.0", "< 5.0"
 
   s.add_development_dependency "sqlite3"
 end
