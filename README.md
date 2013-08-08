@@ -153,7 +153,7 @@ created and allow it to be set once at some arbitrary point in the future, but
 once set, still make it immutable. A WORM (write once, read many) attribute of
 sorts.
 
-    validates :user_id, write_once: true
+    validates :user_id, allow_nil: true, write_once: true
 
 
 ## Error messages
@@ -173,4 +173,4 @@ Default messages are as follows:
 
 ## Compatibility ##
 
-Tested with Ruby 1.9 and ActiveSupport and ActiveModel 3.2.8+.
+Tested with Ruby 1.9 and ActiveSupport and ActiveModel 4.0.0.
