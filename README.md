@@ -115,6 +115,7 @@ Always skips over nil values; use `:presence` to validate those.
     validates :start_at, before: :finish_at
     validates :finish_at, after: [:start_at, :alt_start_at]
     validates :start_at, presence: true, before: :finish_at
+    validates :finish_at, after: ->(r){ Time.current }
     
     # Long versions, if you need to add extra validation options:
     validates :start_at, before: {value_of: :finish_at, message: "..." }

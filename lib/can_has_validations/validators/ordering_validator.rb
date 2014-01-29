@@ -9,9 +9,10 @@
 module ActiveModel::Validations
   class BeforeValidator < ActiveModel::EachValidator
     def validate_each(record, attribute, value)
-      compare_to = Array(options[:value_of] || options[:values_of] || options[:in] || options[:with])
+      compare_to = Array.wrap(options[:value_of] || options[:values_of] || options[:in] || options[:with])
       compare_to.each do |attr_name|
-        greater = record.send attr_name
+        greater = attr_name.call(record) if attr_name.respond_to?(:call)
+        greater ||= record.send attr_name
         next unless value && greater
         unless value < greater
           attr2 = record.class.human_attribute_name attr_name
@@ -22,9 +23,10 @@ module ActiveModel::Validations
   end
   class AfterValidator < ActiveModel::EachValidator
     def validate_each(record, attribute, value)
-      compare_to = Array(options[:value_of] || options[:values_of] || options[:in] || options[:with])
+      compare_to = Array.wrap(options[:value_of] || options[:values_of] || options[:in] || options[:with])
       compare_to.each do |attr_name|
-        lesser = record.send attr_name
+        lesser = attr_name.call(record) if attr_name.respond_to?(:call)
+        lesser ||= record.send attr_name
         next unless value && lesser
         unless value > lesser
           attr2 = record.class.human_attribute_name attr_name
