@@ -7,10 +7,11 @@ module ActiveModel::Validations
     def validate_each(record, attribute, value)
       if defined?(Addressable::URI)
         u = Addressable::URI.parse(value) rescue nil
+        u2 = u && URI.parse(u.normalize.to_s) rescue nil
       else
-        u = URI.parse(value) rescue nil
+        u2 = u = URI.parse(value) rescue nil
       end
-      if !u || u.relative? || %w(http https).exclude?(u.scheme)
+      if !u || !u2 || u.relative? || %w(http https).exclude?(u.scheme)
         record.errors.add(attribute, :invalid_url, options)
       end
     end

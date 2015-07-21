@@ -12,7 +12,7 @@ Validations provided:
 * URL
 * Write Once
 
-All validators use the newer Rails 3 syntax:
+All validators use the newer Rails 3+ syntax:
 
     validates :some_attribute, email: true
 
@@ -174,4 +174,4 @@ Default messages are as follows:
 
 ## Compatibility ##
 
-Tested with Ruby 1.9 and ActiveSupport and ActiveModel 4.0.0.
+Tested with Ruby 2.1 and ActiveSupport and ActiveModel 4.2.
