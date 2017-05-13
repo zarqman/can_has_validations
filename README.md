@@ -147,16 +147,18 @@ Always skips over nil values; use `:presence` to validate those.
 ## URL validator ##
 
 Ensure an attribute is generally formatted as a URL. If `addressable/uri` is
-already loaded, it will be used to parse IDN's.
+already loaded, it will be used to parse IDN's. Additionally, allowed schemes
+can be specified; they default to ['http','https'].
 
     validates :website, url: true
+    validates :secure_url, url: {scheme: 'https'}
 
     # With IDN parsing:
     require 'addressable/uri'
     validates :website, url: true
 
     # Or, as part of your Gemfile:
-    gem 'addressable', require: 'addressable/uri'
+    gem 'addressable'
     gem 'can_has_validations'
 
 
