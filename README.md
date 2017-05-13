@@ -199,4 +199,4 @@ Default messages are as follows:
 
 ## Compatibility ##
 
-Tested with Ruby 2.1 and ActiveSupport and ActiveModel 4.2.
+Tested with Ruby 2.3-2.4 and ActiveSupport and ActiveModel 4.2-5.1.

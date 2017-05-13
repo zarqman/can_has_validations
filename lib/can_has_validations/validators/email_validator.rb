@@ -1,5 +1,5 @@
 # Ensure an attribute is generally formatted as an email.
-# eg: validates :user_email, :email=>true
+# eg: validates :user_email, email: true
 
 module ActiveModel::Validations
   class EmailValidator < ActiveModel::EachValidator

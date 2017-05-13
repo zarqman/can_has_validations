@@ -1,8 +1,8 @@
 # Ensure two (or more) associations share a common parent
 #   :allow_nil will not only allow the attribute/association to be nil, but
 #     also any of the :scope's.
-# eg: validates :user, :grandparent=>{:scope=>:org, :parent=>:realm}
-#     validates :user, :grandparent=>{:scope=>[:phone, :address], :parent=>:account_id}
+# eg: validates :user, grandparent: {scope: :org, parent: :realm}
+#     validates :user, grandparent: {scope: [:phone, :address], parent: :account_id}
 
 module ActiveModel::Validations
   class GrandparentValidator < ActiveModel::EachValidator

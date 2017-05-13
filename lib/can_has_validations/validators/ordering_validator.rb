@@ -1,10 +1,10 @@
 # Attribute ordering
 #   Ensures one value is greater or lesser than another (set of) value(s).
 #   Always skips over nil values; use :presence to validate those.
-# eg: validates :start_at, :before=>:finish_at
-#     validates :start_at, :before=>{:value_of=>:finish_at, :if=>... }
-#     validates :finish_at, :after => [:start_at, :alt_start_at]
-#     validates :finish_at, :after=>{:values_of => [:start_at, :alt_start_at], :if=>... }
+# eg: validates :start_at, before: :finish_at
+#     validates :start_at, before: {value_of: :finish_at, if: ... }
+#     validates :finish_at, after: [:start_at, :alt_start_at]
+#     validates :finish_at, after: {values_of: [:start_at, :alt_start_at], if: ... }
 
 module ActiveModel::Validations
   class BeforeValidator < ActiveModel::EachValidator
@@ -16,7 +16,7 @@ module ActiveModel::Validations
         next unless value && greater
         unless value < greater
           attr2 = record.class.human_attribute_name attr_name
-          record.errors.add(attribute, :before, options.except(:before).merge!(:attribute2=>attr2))
+          record.errors.add(attribute, :before, options.except(:before).merge!(attribute2: attr2))
         end
       end
     end
@@ -30,7 +30,7 @@ module ActiveModel::Validations
         next unless value && lesser
         unless value > lesser
           attr2 = record.class.human_attribute_name attr_name
-          record.errors.add(attribute, :after, options.except(:after).merge!(:attribute2=>attr2))
+          record.errors.add(attribute, :after, options.except(:after).merge!(attribute2: attr2))
         end
       end
     end
