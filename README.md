@@ -8,6 +8,7 @@ Validations provided:
 * Email
 * Existence
 * Grandparent
+* Hostname
 * Ordering
 * URL
 * Write Once
@@ -103,6 +104,27 @@ or the database foreign key (`:user_id`). You can also use any other field. The
 test is merely that they match, not that they are associations.
 
 
+## Hostname validator ##
+
+Ensures an attribute is generally formatted as a hostname. It allows for any
+TLD, so as to not fail as ICANN continues to add TLDs.
+
+    validates :domain, hostname: true
+
+    # allows '*.example.com'
+    validates :domain, hostname: {allow_wildcard: true}
+
+    # allows '_abc.example.com'
+    validates :domain, hostname: {allow_underscore: true}
+
+    # allows 'a.example.com', but not 'example.com'
+    validates :domain, hostname: {segments: 3..100}
+
+    # allows '1.2.3.4' or 'a.example.com'
+    validates :domain, hostname: {allow_ip: true}
+    # use 4 or 6 for ipv4 or ipv6 only
+
+
 ## Ordering validators ##
 
 Ensures two attribute values maintain a relative order to one another. This is
@@ -166,6 +188,7 @@ Default messages are as follows:
       errors:
         messages:
           invalid_email: "is an invalid email"
+          invalid_hostname: "is an invalid hostname"
           invalid_url: "is an invalid URL"
           unchangeable: "cannot be changed"
           before: "must be before %{attribute2}"

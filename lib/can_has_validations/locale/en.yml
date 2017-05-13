@@ -2,6 +2,7 @@ en:
   errors:
     messages:
       invalid_email: "is an invalid email"
+      invalid_hostname: "is an invalid hostname"
       invalid_url: "is an invalid URL"
       unchangeable: "cannot be changed"
       before: "must be before %{attribute2}"
