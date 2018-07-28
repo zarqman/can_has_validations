@@ -5,6 +5,7 @@ ActiveModel.
 
 Validations provided:
 
+* Array
 * Email
 * Existence
 * Grandparent
@@ -29,6 +30,35 @@ Add it to your `Gemfile`:
 
 
 
+## Array validator ##
+
+Many database engines allow for arrays of attributes. This validates each
+member element of those arrays.
+
+It is able to use most existing validators that themselves work on individual
+attribute values (including standard Rails validators, others that are part of
+this gem, and likely many from other gems too).
+
+By default, it will stop validation of an array attribute after the first error
+per validator, regardless of how many elements might fail validation. This both
+improves performance as well as avoids producing a large number of duplicate
+error messages. Add `multiple_errors: true` on `:array` or any individual
+sub-validator to instead return all errors (useful if each error message will
+vary based on the element's value).
+
+    validates :tags,
+      array: {
+        format: /\A[^aeiou]*\z/,
+        length: 5..10
+      }
+
+    validates :permissions,
+      array: {
+        multiple_errors: true,
+        format: /\A[^aeiou]*\z/
+      }
+
+
 ## Email validator ##
 
 Ensures an attribute is generally formatted as an email. It uses a basic regex
@@ -51,7 +81,7 @@ avoid any potential conflicts).
 Mongoid 3 and 4 also exhibit the same behavior as Rails 4, even under Rails 3,
 so this is useful with Mongoid as well.
 
-    validates :name, presence: true
+    validates :name, existence: true
 
 
 ## Grandparent validator ##
