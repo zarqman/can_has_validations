@@ -28,7 +28,7 @@ module ActiveModel
       def initialize(options)
         record_class = options[:class]
         super
-        record_class.prepend DefaultKeys
+        record_class.extend DefaultKeys
 
         defaults = @options.dup
         validations = defaults.slice!(*record_class.send(:_validates_default_keys), :attributes)
