@@ -159,7 +159,9 @@ TLD, so as to not fail as ICANN continues to add TLDs.
 
 Ensures two attribute values maintain a relative order to one another. This is
 often useful when two date or range values. Validations can be written using
-either `:before` or `:after` to make them readable.
+either `:before` or `:after` to make them readable. The special value of `:now`
+will automatically become Time.now (without needing a lambda).
+
 
 Always skips over nil values; use `:presence` to validate those.
 
@@ -167,7 +169,9 @@ Always skips over nil values; use `:presence` to validate those.
     validates :start_at, before: :finish_at
     validates :finish_at, after: [:start_at, :alt_start_at]
     validates :start_at, presence: true, before: :finish_at
-    validates :finish_at, after: ->(r){ Time.current }
+    # These two are the same, except `:now` produces a clearer error message:
+    validates :finish_at, after: :now
+    validates :finish_at, after: ->(r){ Time.now }
     
     # Long versions, if you need to add extra validation options:
     validates :start_at, before: {value_of: :finish_at, message: "..." }
@@ -229,4 +233,4 @@ Default messages are as follows:
 
 ## Compatibility ##
 
-Tested with Ruby 2.3-2.4 and ActiveSupport and ActiveModel 4.2-5.1.
+Tested with Ruby 2.3-2.5 and ActiveSupport and ActiveModel 4.2-5.2.
