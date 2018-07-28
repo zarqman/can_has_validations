@@ -30,6 +30,7 @@ module ActiveModel::Validations
 
     LABEL_REGEXP = /\A([a-zA-Z0-9_]([a-zA-Z0-9_-]+)?)?[a-zA-Z0-9]\z/
     FINAL_LABEL_REGEXP = /\A(xn--[a-zA-Z0-9]{2,}|[a-zA-Z]{2,})\z/
+    RESERVED_OPTIONS = %i(allow_ip allow_underscore allow_wildcard)
 
     def validate_each(record, attribute, value)
       case options[:allow_ip]
@@ -65,7 +66,7 @@ module ActiveModel::Validations
       end
 
       unless is_valid
-        record.errors.add(attribute, :invalid_hostname, options)
+        record.errors.add(attribute, :invalid_hostname, options.except(*RESERVED_OPTIONS).merge!(value: value))
       end
     end
 

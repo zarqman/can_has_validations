@@ -20,7 +20,7 @@ module ActiveModel::Validations
     def validate_each(record, attribute, value)
       if record.persisted? && record.send("#{attribute}_changed?")
         if options[:immutable_nil] || !record.send("#{attribute}_was").nil?
-          record.errors.add(attribute, :unchangeable, options)
+          record.errors.add(attribute, :unchangeable, options.except(:immutable_nil).merge!(value: value))
         end
       end
     end

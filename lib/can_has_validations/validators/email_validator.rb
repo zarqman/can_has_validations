@@ -8,7 +8,7 @@ module ActiveModel::Validations
 
     def validate_each(record, attribute, value)
       unless value =~ EMAIL_REGEXP
-        record.errors.add(attribute, :invalid_email, options)
+        record.errors.add(attribute, :invalid_email, options.merge(value: value))
       end
     end
   end

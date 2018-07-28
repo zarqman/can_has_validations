@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    can_has_validations (0.5.1)
+    can_has_validations (0.6.1)
       rails (>= 3.0, < 6)
 
 GEM

@@ -15,8 +15,8 @@ module ActiveModel::Validations
         greater ||= record.send attr_name
         next unless value && greater
         unless value < greater
-          attr2 = record.class.human_attribute_name attr_name
-          record.errors.add(attribute, :before, options.except(:before).merge!(attribute2: attr2))
+          attr2 = attr_name.respond_to?(:call) ? 'it is' : record.class.human_attribute_name(attr_name)
+          record.errors.add(attribute, :before, options.except(:before).merge!(attribute2: attr2, value: value))
         end
       end
     end
@@ -29,8 +29,8 @@ module ActiveModel::Validations
         lesser ||= record.send attr_name
         next unless value && lesser
         unless value > lesser
-          attr2 = record.class.human_attribute_name attr_name
-          record.errors.add(attribute, :after, options.except(:after).merge!(attribute2: attr2))
+          attr2 = attr_name.respond_to?(:call) ? 'it is' : record.class.human_attribute_name(attr_name)
+          record.errors.add(attribute, :after, options.except(:after).merge!(attribute2: attr2, value: value))
         end
       end
     end

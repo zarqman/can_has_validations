@@ -37,8 +37,8 @@ module ActiveModel
 
         defaults[:attributes] = attributes
 
-        @validators = validations.map do |key, options|
-          next unless options
+        @validators = validations.map do |key, sub_options|
+          next unless sub_options
           key = "#{key.to_s.camelize}Validator"
 
           begin
@@ -47,7 +47,7 @@ module ActiveModel
             raise ArgumentError, "Unknown validator: '#{key}'"
           end
 
-          validator = klass.new(defaults.merge(_parse_validates_options(options)))
+          klass.new(defaults.merge(_parse_validates_options(sub_options)))
         end
       end
 
