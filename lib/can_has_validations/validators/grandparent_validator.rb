@@ -20,7 +20,7 @@ module ActiveModel::Validations
         end
       end
       unless all_match
-        record.errors.add(attribute, :invalid, options.except(:allow_nil, :parent, :scope).merge!(value: value))
+        record.errors.add(attribute, :invalid, options.except(:allow_nil, :parent, :scope))
       end
     end
   end
