@@ -22,6 +22,8 @@
 #       allows 'a.example.com', but not 'example.com'
 #     validates :domain, hostname: {allow_ip: true}  # or 4 or 6 for ipv4 or ipv6 only
 #       allows '1.2.3.4' or 'a.example.com'
+#     validates :subdomain, hostname: {skip_tld: true, segments: 1}
+#       allows 'subdomain1'
 
 require 'resolv'
 
@@ -56,7 +58,7 @@ module ActiveModel::Validations
       is_valid &&= labels.size.in? segments
       labels.each_with_index do |label, idx|
         is_valid &&= label.length <= 63
-        if idx+1==labels.size
+        if !options[:skip_tld] && idx+1==labels.size
           is_valid &&= label =~ FINAL_LABEL_REGEXP
         elsif options[:allow_wildcard] && idx==0
           is_valid &&= label=='*' || label =~ LABEL_REGEXP

@@ -150,6 +150,9 @@ TLD, so as to not fail as ICANN continues to add TLDs.
     # allows 'a.example.com', but not 'example.com'
     validates :domain, hostname: {segments: 3..100}
 
+    # allows 'subdomain'
+    validates :subdomain, hostname: {segments: 1, skip_tld: true}
+
     # allows '1.2.3.4' or 'a.example.com'
     validates :domain, hostname: {allow_ip: true}
     # use 4 or 6 for ipv4 or ipv6 only
