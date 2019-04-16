@@ -7,7 +7,13 @@
 module ActiveModel::Validations
   class UrlValidator < ActiveModel::EachValidator
     def validate_each(record, attribute, value)
-      allowed_schemes = Array.wrap(options[:scheme] || %w(http https))
+      allowed_schemes = if options[:scheme].respond_to?(:call)
+        options[:scheme].call(record)
+      elsif options[:scheme].is_a?(Symbol)
+        record.send(options[:scheme])
+      else
+        Array.wrap(options[:scheme] || %w(http https))
+      end
 
       if defined?(Addressable::URI)
         u = Addressable::URI.parse(value) rescue nil
@@ -16,7 +22,7 @@ module ActiveModel::Validations
         u2 = u = URI.parse(value) rescue nil
       end
       if !u || !u2 || u.relative? || allowed_schemes.exclude?(u.scheme)
-        record.errors.add(attribute, :invalid_url, options.merge(value: value))
+        record.errors.add(attribute, :invalid_url, options.merge(value: value, scheme: allowed_schemes))
       end
     end
   end

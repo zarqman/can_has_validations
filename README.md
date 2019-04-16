@@ -190,6 +190,10 @@ can be specified; they default to ['http','https'].
     validates :website, url: true
     validates :secure_url, url: {scheme: 'https'}
 
+    # Dynamic list of schemes. *Must* return an array.
+    validates :git, url: {scheme: :some_method}
+    validates :old_school, url: {scheme: ->(record){ %w(ftp gopher) }}
+
     # With IDN parsing:
     require 'addressable/uri'
     validates :website, url: true
