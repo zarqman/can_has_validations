@@ -240,4 +240,4 @@ Default messages are as follows:
 
 ## Compatibility ##
 
-Tested with Ruby 2.3-2.5 and ActiveSupport and ActiveModel 4.2-5.2.
+The current version is tested with Ruby 2.5-2.6 and ActiveModel 5.2-6.0.
