@@ -18,6 +18,7 @@ module ActiveModel::Validations
     end
 
     def email_valid?(value)
+      return unless value
       recipient, domain = value.split('@', 2)
       is_valid = true
 
