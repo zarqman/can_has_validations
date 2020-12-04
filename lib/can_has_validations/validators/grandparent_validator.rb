@@ -16,7 +16,8 @@ module ActiveModel::Validations
         if cousin.nil?
           options[:allow_nil]
         else
-          association.send(options[:parent]) == cousin.send(options[:parent])
+          association &&
+            association.send(options[:parent]) == cousin.send(options[:parent])
         end
       end
       unless all_match
