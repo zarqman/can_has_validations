@@ -18,6 +18,8 @@
 #       allows '*.example.com'
 #     validates :domain, hostname: {allow_underscore: true}
 #       allows '_abc.example.com'
+#     validates :domain, hostname: {allow_slash: true}
+#       allows '4.0/25.3.2.1.example.com'  # rfc2317
 #     validates :domain, hostname: {segments: 3..100}
 #       allows 'a.example.com', but not 'example.com'
 #     validates :domain, hostname: {allow_ip: true}  # or 4 or 6 for ipv4 or ipv6 only
@@ -30,9 +32,9 @@ require 'resolv'
 module ActiveModel::Validations
   class HostnameValidator < ActiveModel::EachValidator
 
-    LABEL_REGEXP = /\A([a-zA-Z0-9_]([a-zA-Z0-9_-]+)?)?[a-zA-Z0-9]\z/
-    FINAL_LABEL_REGEXP = /\A(xn--[a-zA-Z0-9]{2,}|[a-zA-Z]{2,})\z/
-    RESERVED_OPTIONS = %i(allow_ip allow_underscore allow_wildcard)
+    LABEL_REGEXP = %r{\A([a-zA-Z0-9_]([a-zA-Z0-9_/-]+)?)?[a-zA-Z0-9]\z}
+    FINAL_LABEL_REGEXP = %r{\A(xn--[a-zA-Z0-9]{2,}|[a-zA-Z]{2,})\z}
+    RESERVED_OPTIONS = %i(allow_ip allow_slash allow_underscore allow_wildcard)
 
     def validate_each(record, attribute, value)
       case options[:allow_ip]
@@ -55,6 +57,7 @@ module ActiveModel::Validations
       is_valid &&= value.length <= 255
       is_valid &&= value !~ /\.\./
       is_valid &&= value !~ /_/ unless options[:allow_underscore]
+      is_valid &&= value !~ %r{/} unless options[:allow_slash]
       is_valid &&= labels.size.in? segments
       labels.each_with_index do |label, idx|
         is_valid &&= label.length <= 63
