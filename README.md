@@ -148,6 +148,9 @@ TLD, so as to not fail as ICANN continues to add TLDs.
     # allows '_abc.example.com'
     validates :domain, hostname: {allow_underscore: true}
 
+    # allows '4.0/25.3.2.1.example.com'
+    validates :domain, hostname: {allow_slash: true}
+
     # allows 'a.example.com', but not 'example.com'
     validates :domain, hostname: {segments: 3..100}
 
@@ -212,7 +215,7 @@ Always skips over nil values; use `:presence` to validate those.
 
 ## URL validator ##
 
-Ensure an attribute is generally formatted as a URL. If `addressable/uri` is
+Ensures an attribute is generally formatted as a URL. If `addressable/uri` is
 already loaded, it will be used to parse IDN's. Additionally, allowed schemes
 can be specified; they default to ['http','https'].
 
@@ -234,8 +237,8 @@ can be specified; they default to ['http','https'].
 
 ## Write Once validator ##
 
-Ensure that once a value is written, it becomes readonly. There are two uses
-for this. 
+Ensures that once a value is written, it becomes readonly. There are a few
+uses for this.
 
 The first is as an equivalent to `attr_readonly :user_id` except that it also
 produces a validation error instead of silently ignoring the change as
@@ -249,6 +252,10 @@ once set, still make it immutable. A WORM (write once, read many) attribute of
 sorts.
 
     validates :user_id, allow_nil: true, write_once: true
+
+The third use is to allow a nil value, and treat the nil also as write-once.
+
+    validates :source, write_once: {immutable_nil: true}
 
 
 ## Error messages
