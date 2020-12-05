@@ -10,6 +10,7 @@ Validations provided:
 * Existence
 * Grandparent
 * Hostname
+* IP address
 * Ordering
 * URL
 * Write Once
@@ -158,6 +159,34 @@ TLD, so as to not fail as ICANN continues to add TLDs.
     # use 4 or 6 for ipv4 or ipv6 only
 
 
+## IP address validator ##
+
+Ensures an attribute is generally formatted as a IP or IP block.
+
+    # allows '1.2.3.4' or '::1'
+    validates :ip, ipaddr: true
+
+    # allows '1.2.3.0/24' or '2001:db8::/64'
+    validates :cidr, ipaddr: {allow_block: true}
+
+    # if an ip block, the attribute must be fully contained within an allowed block.
+    # allows '10.0.0.1' and '10.0.0.0/24', but not '10.0.0.0/15'
+    validates :private_ip, ipaddr: {
+      allow_block: true,
+      within: [IPAddr.new('10.0.0.0/16'), '127.0.0.1']
+        # allowed IPs and blocks may be IPAddrs or Strings
+    }
+
+    # the inverse of :within
+    validates :public_ip6, ipaddr: {without: ['fc00::/7']]}
+
+    # :within and :without may also be procs or method names
+    validates :ip, ipaddr: {
+      within: :some_method,
+      without: ->(record){ ... }
+    }
+
+
 ## Ordering validators ##
 
 Ensures two attribute values maintain a relative order to one another. This is
@@ -232,6 +261,9 @@ Default messages are as follows:
         messages:
           invalid_email: "is an invalid email"
           invalid_hostname: "is an invalid hostname"
+          invalid_ip: "is an invalid IP"
+          ip_not_allowed: "is not an allowed IP"
+          single_ip_required: "must be a single IP"
           invalid_url: "is an invalid URL"
           unchangeable: "cannot be changed"
           before: "must be before %{attribute2}"

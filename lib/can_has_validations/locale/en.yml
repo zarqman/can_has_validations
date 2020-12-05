@@ -3,8 +3,10 @@ en:
     messages:
       invalid_email: "is an invalid email"
       invalid_hostname: "is an invalid hostname"
+      invalid_ip: "is an invalid IP"
+      ip_not_allowed: "is not an allowed IP"
+      single_ip_required: "must be a single IP"
       invalid_url: "is an invalid URL"
       unchangeable: "cannot be changed"
       before: "must be before %{attribute2}"
       after: "must be after %{attribute2}"
-      
