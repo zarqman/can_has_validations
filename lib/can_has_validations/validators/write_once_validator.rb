@@ -12,14 +12,20 @@ module ActiveModel::Validations
     #   nil to be allowed. prevent this.
     def validate(record)
       attributes.each do |attribute|
-        value = record.read_attribute_for_validation(attribute)
-        validate_each(record, attribute, value)
+        validate_each(record, attribute, nil)
       end
     end
 
-    def validate_each(record, attribute, value)
-      if record.persisted? && record.send("#{attribute}_changed?")
-        if options[:immutable_nil] || !record.send("#{attribute}_was").nil?
+    def validate_each(record, attribute, _)
+      return unless record.persisted?
+      if !record.respond_to?("#{attribute}_changed?") && record.respond_to?("#{attribute}_id_changed?")
+        attr2 = "#{attribute}_id"
+      else
+        attr2 = attribute
+      end
+      if record.send("#{attr2}_changed?")
+        if options[:immutable_nil] || !record.send("#{attr2}_was").nil?
+          value = record.read_attribute_for_validation(attribute)
           record.errors.add(attribute, :unchangeable, options.except(:immutable_nil).merge!(value: value))
         end
       end
