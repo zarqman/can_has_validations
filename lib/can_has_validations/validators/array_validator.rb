@@ -70,8 +70,7 @@ module ActiveModel
       private
 
       def count_errors(record)
-        # more efficient than calling record.errors.size
-        record.errors.messages.sum{|key, val| val.blank? ? 0 : val.size }
+        record.errors.count
       end
 
       def _parse_validates_options(options)
