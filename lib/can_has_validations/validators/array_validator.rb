@@ -19,6 +19,18 @@
 #       multiple_errors: true,
 #       format: /\A[^aeiou]*\z/
 #     }
+#
+# the :if, :unless, and :on conditionals are not supported on sub-validators,
+# but do work as normal on the :array validator itself.
+#
+#   validates :permissions, if: :this_condition_works,
+#     array: {
+#       if: :this_condition_applies_to_permissions_but_not_each_element,
+#       inclusion: {
+#         in: %w(one two),
+#         unless: :conditions_on_subvalidators_are_ignored
+#       }
+#     }
 
 module ActiveModel
   module Validations
@@ -33,12 +45,17 @@ module ActiveModel
         defaults = @options.dup
         validations = defaults.slice!(*record_class.send(:_validates_default_keys), :attributes)
 
-        raise ArgumentError, "You need to supply at least one array validation" if validations.empty?
+        raise ArgumentError, "You need to supply at least one validation for :#{kind}" if validations.empty?
 
         defaults[:attributes] = attributes
 
         @validators = validations.map do |key, sub_options|
           next unless sub_options
+
+          if (cond_keys = _parse_validates_options(sub_options).keys & %i(if on unless)).any?
+            raise ArgumentError, ":#{kind} does not support conditionals on sub-validators - found on #{key}: #{cond_keys.map(&:inspect).join(', ')}"
+          end
+
           key = "#{key.to_s.camelize}Validator"
 
           begin
@@ -47,7 +64,7 @@ module ActiveModel
             raise ArgumentError, "Unknown validator: '#{key}'"
           end
 
-          klass.new(defaults.merge(_parse_validates_options(sub_options)))
+          klass.new(defaults.merge(_parse_validates_options(sub_options)).except(:if, :on, :unless))
         end
       end
 
@@ -56,7 +73,7 @@ module ActiveModel
           error_count = count_errors(record)
 
           Array(array_values).each do |value|
-            validator.validate_each(record, attribute, value)
+            validate_one(validator, record, attribute, value)
 
             # to avoid repeating error messages, stop after a single error
             unless validator.options[:multiple_errors]
@@ -66,6 +83,13 @@ module ActiveModel
         end
       end
 
+      def validate_one(validator, record, attribute, value)
+        unless validator.is_a?(ExistenceValidator)
+          return if (value.nil? && validator.options[:allow_nil]) || (value.blank? && validator.options[:allow_blank])
+        end
+        validator.validate_each(record, attribute, value)
+      end
+
 
       private
 
@@ -73,6 +97,7 @@ module ActiveModel
         record.errors.count
       end
 
+      # copied from active_model/validations/validates.rb
       def _parse_validates_options(options)
         case options
         when TrueClass

@@ -9,6 +9,8 @@ Validations provided:
 * Email
 * Existence
 * Grandparent
+* Hash Keys
+* Hash Values
 * Hostname
 * IP address
 * Ordering
@@ -135,6 +137,42 @@ or the database foreign key (`:user_id`). You can also use any other field. The
 test is merely that they match, not that they are associations.
 
 
+## Hash Keys validator ##
+
+Many databases now allow storing hashes. This validates the keys of those
+hashes. It is conceptually the same as using the Array validator to validate
+`hash_attribute.keys`.
+
+It is able to use most existing validators that themselves work on individual
+attribute values (including standard Rails validators, others that are part of
+this gem, and likely many from other gems too).
+
+By default it reports only one validation error per sub-validator, regardless
+of how many keys fail validation. Use `multiple_errors: true` to report all
+errors. See Array validator for more details.
+
+    validates :subjects,
+      hash_keys: {
+        format: /\A[a-z]+\z/,
+        # multiple_errors: true
+      }
+
+
+## Hash Values validator ##
+
+This is the companion to the Hash Keys validator and validates hash values
+instead. It is conceptually the same as using the Array validator to validate
+`hash_attribute.values`.
+
+See Hash Keys validator for more details.
+
+    validates :subjects,
+      hash_values: {
+        length: 3..100,
+        # multiple_errors: true
+      }
+
+
 ## Hostname validator ##
 
 Ensures an attribute is generally formatted as a hostname. It allows for any
@@ -217,7 +255,7 @@ Always skips over nil values; use `:presence` to validate those.
 
 Ensures an attribute is generally formatted as a URL. If `addressable/uri` is
 already loaded, it will be used to parse IDN's. Additionally, allowed schemes
-can be specified; they default to ['http','https'].
+can be specified; they default to `['http','https']`.
 
     validates :website, url: true
     validates :secure_url, url: {scheme: 'https'}
