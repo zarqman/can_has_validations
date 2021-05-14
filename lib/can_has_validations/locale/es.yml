@@ -1,0 +1,12 @@
+es:
+  errors:
+    messages:
+      invalid_email: "es un correo electrónico no válido"
+      invalid_hostname: "es un nombre de sistema no válido"
+      invalid_ip: "es una IP no válida"
+      ip_not_allowed: "no es una IP permitida"
+      single_ip_required: "debe ser solo una IP"
+      invalid_url: "es una URL no válida"
+      unchangeable: "no se puede cambiar"
+      before: "debe ser antes de %{attribute2}"
+      after: "debe ser después de %{attribute2}"
