@@ -71,7 +71,7 @@ module ActiveModel::Validations
       end
 
       unless is_valid
-        record.errors.add(attribute, :invalid_hostname, options.except(*RESERVED_OPTIONS).merge!(value: value))
+        record.errors.add(attribute, :invalid_hostname, **options.except(*RESERVED_OPTIONS).merge!(value: value))
       end
     end
 

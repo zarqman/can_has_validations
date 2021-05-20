@@ -30,17 +30,17 @@ module ActiveModel::Validations
           IPAddr.new(value) rescue nil
       end
       unless ip
-        record.errors.add(attribute, :invalid_ip, options.merge(value: value))
+        record.errors.add(attribute, :invalid_ip, **options.merge(value: value))
         return
       end
 
       if !options[:allow_block] && (ip.ipv4? && ip.prefix!=32 or ip.ipv6? && ip.prefix!=128)
-        record.errors.add(attribute, :single_ip_required, options.merge(value: value))
+        record.errors.add(attribute, :single_ip_required, **options.merge(value: value))
       end
       if allowed_ips && allowed_ips.none?{|blk| blk.include? ip}
-        record.errors.add(attribute, :ip_not_allowed, options.merge(value: value))
+        record.errors.add(attribute, :ip_not_allowed, **options.merge(value: value))
       elsif disallowed_ips && disallowed_ips.any?{|blk| blk.include? ip}
-        record.errors.add(attribute, :ip_not_allowed, options.merge(value: value))
+        record.errors.add(attribute, :ip_not_allowed, **options.merge(value: value))
       end
     end
 

@@ -26,7 +26,7 @@ module ActiveModel::Validations
       if record.send("#{attr2}_changed?")
         if options[:immutable_nil] || !record.send("#{attr2}_was").nil?
           value = record.read_attribute_for_validation(attribute)
-          record.errors.add(attribute, :unchangeable, options.except(:immutable_nil).merge!(value: value))
+          record.errors.add(attribute, :unchangeable, **options.except(:immutable_nil).merge!(value: value))
         end
       end
     end

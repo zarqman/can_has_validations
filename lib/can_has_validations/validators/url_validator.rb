@@ -22,7 +22,7 @@ module ActiveModel::Validations
         u2 = u = URI.parse(value) rescue nil
       end
       if !u || !u2 || u.relative? || allowed_schemes.exclude?(u.scheme)
-        record.errors.add(attribute, :invalid_url, options.merge(value: value, scheme: allowed_schemes))
+        record.errors.add(attribute, :invalid_url, **options.merge(value: value, scheme: allowed_schemes))
       end
     end
   end
