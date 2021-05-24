@@ -37,15 +37,22 @@ module ActiveModel::Validations
       if !options[:allow_block] && (ip.ipv4? && ip.prefix!=32 or ip.ipv6? && ip.prefix!=128)
         record.errors.add(attribute, :single_ip_required, **options.merge(value: value))
       end
-      if allowed_ips && allowed_ips.none?{|blk| blk.include? ip}
+      if allowed_ips && allowed_ips.none?{|blk| ip_within_block? ip, blk}
         record.errors.add(attribute, :ip_not_allowed, **options.merge(value: value))
-      elsif disallowed_ips && disallowed_ips.any?{|blk| blk.include? ip}
+      elsif disallowed_ips && disallowed_ips.any?{|blk| ip_within_block? ip, blk}
         record.errors.add(attribute, :ip_not_allowed, **options.merge(value: value))
       end
     end
 
 
     private
+
+    def ip_within_block?(ip, blk)
+      return false unless ip.family == blk.family
+      ip = ip.to_range
+      blk = blk.to_range
+      ip.begin >= blk.begin && ip.end <= blk.end
+    end
 
     def normalize_within(val, key)
       if val.nil? || val.respond_to?(:call) || val.is_a?(Symbol)
@@ -72,20 +79,9 @@ module ActiveModel::Validations
       else
         val
       end
+      # raise "#{val.inspect} did not resolve to an Array of IPAddr" unless res.is_a?(Array) && res.all?{|r| r.is_a?(IPAddr)}
+      # res
     end
 
-  end
-end
-
-# tests for & fixes broken IPAddr <= 1.2.2
-if IPAddr.new('192.168.2.0/32').include? '192.168.2.0/24'
-  # warn 'IPAddr <= 1.2.2 is broken; monkey-patching'
-  class IPAddr
-    def include?(other)
-      range = to_range
-      other = coerce_other(other).to_range
-      range.begin <= other.begin && range.end >= other.end
-    end
-    alias === include?
   end
 end
