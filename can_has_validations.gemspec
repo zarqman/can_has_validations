@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.email       = ["tm@iprog.com"]
   s.homepage    = "https://github.com/zarqman/can_has_validations"
   s.summary     = "Assorted Rails 5.x-6.x validators"
-  s.description = "Assorted Rails 5.x-6.x validators: Array, Email, Existence, Grandparent, Hostname, IP address, Ordering, URL, Write Once"
+  s.description = "Assorted Rails 5.x-6.x validators: Array, Email, Existence, Grandparent, Hash keys, Hash values, Hostname, IP address, Ordering, URL, Write Once"
   s.license     = 'MIT'
 
   s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.md"]
