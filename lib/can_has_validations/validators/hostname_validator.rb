@@ -24,8 +24,8 @@
 #       allows 'a.example.com', but not 'example.com'
 #     validates :domain, hostname: {allow_ip: true}  # or 4 or 6 for ipv4 or ipv6 only
 #       allows '1.2.3.4' or 'a.example.com'
-#     validates :subdomain, hostname: {skip_tld: true, segments: 1}
-#       allows 'subdomain1'
+#     validates :subdomain, hostname: {skip_tld: true}
+#       allows 'subdomain1'; implies segments: 1..100 unless otherwise specified
 
 require 'resolv'
 
@@ -46,7 +46,7 @@ module ActiveModel::Validations
         return if value =~ Resolv::IPv4::Regex || value =~ Resolv::IPv6::Regex
       end
 
-      segments = options[:segments] || (2..100)
+      segments = options[:segments] || (options[:skip_tld] ? 1..100 : 2..100)
       segments = segments..segments if segments.is_a?(Integer)
       if defined?(Addressable::IDNA)
         value &&= Addressable::IDNA.to_ascii(value)
@@ -63,6 +63,8 @@ module ActiveModel::Validations
         is_valid &&= label.length <= 63
         if !options[:skip_tld] && idx+1==labels.size
           is_valid &&= label =~ FINAL_LABEL_REGEXP
+        elsif options[:allow_wildcard]==:multi && idx==0
+          is_valid &&= %w(** *).include?(label) || label =~ LABEL_REGEXP
         elsif options[:allow_wildcard] && idx==0
           is_valid &&= label=='*' || label =~ LABEL_REGEXP
         else
