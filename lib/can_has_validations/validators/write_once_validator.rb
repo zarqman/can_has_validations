@@ -18,7 +18,9 @@ module ActiveModel::Validations
 
     def validate_each(record, attribute, _)
       return unless record.persisted?
-      if !record.respond_to?("#{attribute}_changed?") && record.respond_to?("#{attribute}_id_changed?")
+      if ( !record.respond_to?("#{attribute}_changed?") ||
+           !record.respond_to?("#{attribute}_was")
+         ) && record.respond_to?("#{attribute}_id_changed?")
         attr2 = "#{attribute}_id"
       else
         attr2 = attribute
