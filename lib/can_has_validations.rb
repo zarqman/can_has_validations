@@ -6,4 +6,6 @@ end
 
 
 require 'active_support/i18n'
-I18n.load_path << File.dirname(__FILE__) + '/can_has_validations/locale/en.yml'
+Dir[File.join(__dir__, 'can_has_validations', 'locale', '*.yml')].each do |fn|
+  I18n.load_path << fn
+end

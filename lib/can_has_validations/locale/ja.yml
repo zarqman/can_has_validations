@@ -1,0 +1,12 @@
+ja:
+  errors:
+    messages:
+      invalid_email: は無効なメールです。
+      invalid_hostname: は無効なホスト名です。
+      invalid_ip: は無効な IP です。
+      ip_not_allowed: は許可された IP ではありません。
+      single_ip_required: は、単一の IP である必要があります。
+      invalid_url: は無効な URL です。
+      unchangeable: は変更できません。
+      before: は、 %{attribute2} の前でなければなりません。
+      after: は、 %{attribute2} の後でなければなりません。
