@@ -19,5 +19,6 @@ Gem::Specification.new do |s|
 
   s.add_dependency "rails", ">= 5.2", "< 7.1"
 
+  s.add_development_dependency "rake"
   s.add_development_dependency "sqlite3"
 end
