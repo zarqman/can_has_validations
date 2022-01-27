@@ -37,6 +37,7 @@ module ActiveModel::Validations
     RESERVED_OPTIONS = %i(allow_ip allow_slash allow_underscore allow_wildcard)
 
     def validate_each(record, attribute, value)
+      value = value.to_s
       case options[:allow_ip]
       when 4, '4'
         return if value =~ Resolv::IPv4::Regex
