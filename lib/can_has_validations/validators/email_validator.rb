@@ -1,38 +1,40 @@
 # Ensure an attribute is generally formatted as an email.
 # eg: validates :user_email, email: true
+#     validates :user_email, email: {allow_unicode: true}
 
 require_relative 'hostname_validator'
 
 module ActiveModel::Validations
   class EmailValidator < ActiveModel::EachValidator
 
-    EMAIL_REGEXP       = /\A([a-z0-9._+-]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i
-    SEGMENT_REGEXP     = /\A[a-z0-9+_-]+\z/i
-    LABEL_REGEXP       = HostnameValidator::LABEL_REGEXP
+    EMAIL_REGEXP       = /\A([a-z0-9._+-]+)@((?:[a-z0-9-]+\.)+[a-z]{2,})\z/i
+    SEGMENT_REGEXP     = /\A[a-z0-9_+-]+\z/i
+    LABEL_REGEXP       = %r{\A([a-zA-Z0-9]([a-zA-Z0-9-]+)?)?[a-zA-Z0-9]\z}
+      # HostnameValidator::LABEL_REGEXP minus _/
     FINAL_LABEL_REGEXP = HostnameValidator::FINAL_LABEL_REGEXP
 
     def validate_each(record, attribute, value)
-      unless email_valid?(value)
+      unless email_valid?(value, **options.slice(:allow_unicode))
         record.errors.add(attribute, :invalid_email, **options.merge(value: value))
       end
     end
 
-    def email_valid?(value)
+    def email_valid?(value, allow_unicode: false)
       return unless value
-      recipient, domain = value.split('@', 2)
+      recipient, domain = value.to_s.split('@', 2)
       is_valid = true
 
       recipient ||= ''
       is_valid &&= recipient.length <= 255
       is_valid &&= recipient !~ /\.\./
-      is_valid &&= !recipient.starts_with?('.') 
-      is_valid &&= !recipient.ends_with?('.') 
+      is_valid &&= !recipient.starts_with?('.')
+      is_valid &&= !recipient.ends_with?('.')
       recipient.split('.').each do |segment|
         is_valid &&= segment =~ SEGMENT_REGEXP
       end
 
       domain ||= ''
-      if defined?(Addressable::IDNA)
+      if allow_unicode && defined?(Addressable::IDNA)
         domain &&= Addressable::IDNA.to_ascii(domain)
       end
       labels = domain.split('.')
