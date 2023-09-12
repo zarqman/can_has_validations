@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     can_has_validations (1.8.1)
-      rails (>= 5.2, < 7.1)
+      rails (>= 5.2, < 7.2)
 
 GEM
   remote: https://rubygems.org/
