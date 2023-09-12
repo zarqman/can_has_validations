@@ -12,7 +12,7 @@
 # If the addressable gem is present, will automatically turn unicode domains
 #   into their punycode (xn--) equivalent. Otherwise, unicode characters will
 #   cause the validation to fail.
-#   
+#
 # eg: validates :domain, hostname: true
 #     validates :domain, hostname: {allow_wildcard: true}
 #       allows '*.example.com'
@@ -52,7 +52,7 @@ module ActiveModel::Validations
       if defined?(Addressable::IDNA)
         value &&= Addressable::IDNA.to_ascii(value)
       end
-      labels = value.split('.')
+      labels = value.split('.', -1)
 
       is_valid = true
       is_valid &&= value.length <= 255
