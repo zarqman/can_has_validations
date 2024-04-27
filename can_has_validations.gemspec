@@ -14,11 +14,11 @@ Gem::Specification.new do |s|
   s.description = "Assorted Rails 5.x-7.x validators: Array, Email, Existence, Grandparent, Hash keys, Hash values, Hostname, IP address, Ordering, URL, Write Once"
   s.license     = 'MIT'
 
-  s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.md"]
+  s.files = Dir["{app,config,db,lib}/**/*"] + ["LICENSE.txt", "Rakefile", "README.md"]
   s.test_files = Dir["test/**/*"]
 
   s.add_dependency "rails", ">= 5.2", "< 7.2"
 
   s.add_development_dependency "rake"
-  s.add_development_dependency "sqlite3"
+  s.add_development_dependency "sqlite3", '~> 1.4'
 end

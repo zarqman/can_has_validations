@@ -72,15 +72,13 @@ module ActiveModel::Validations
     end
 
     def resolve_array(record, val)
-      res = if val.respond_to?(:call)
+      if val.respond_to?(:call)
         val.call(record)
       elsif val.is_a?(Symbol)
         record.send(val)
       else
         val
       end
-      # raise "#{val.inspect} did not resolve to an Array of IPAddr" unless res.is_a?(Array) && res.all?{|r| r.is_a?(IPAddr)}
-      # res
     end
 
   end
