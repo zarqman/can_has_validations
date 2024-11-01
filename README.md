@@ -17,7 +17,7 @@ Validations provided:
 * URL
 * Write Once
 
-All validators use the newer Rails 3+ syntax:
+All validators use the newer Rails syntax:
 
     validates :some_attribute, email: true
 
@@ -89,7 +89,7 @@ so this is useful with Mongoid as well.
 
 ## Grandparent validator ##
 
-Ensures two (or more) associations share a common parent value. 
+Ensures two (or more) associations share a common parent value.
 
 `allow_nil: true` will not only allow the attribute/association to be nil, but
 also any of the `:scope` values.
@@ -100,21 +100,21 @@ Consider a model tree like this:
       has_many :addresses
       has_many :phones
     end
-    
+
     class Address < ActiveRecord::Base
       belongs_to :user
       has_many :orders
     end
-    
+
     class Phone < ActiveRecord::Base
       belongs_to :user
       has_many :orders
     end
-    
+
     class Order < ActiveRecord::Base
       belongs_to :address
       belongs_to :phone
-      
+
       validates :phone, grandparent: {scope: :address, parent: :user}
     end
 
@@ -123,10 +123,10 @@ For any `Order`, this ensures that both `:address` and `:phone` belong to the sa
 
 Basically it starts with the attribute being validated (`:phone` in this case)
 and the scoped attributes (just `:address` in this case, but you can supply an
-array if needed, eg: `scope: [:billing_address, :mailing_address]` ). 
+array if needed, eg: `scope: [:billing_address, :mailing_address]` ).
 
 Then, it looks for the attribute that is the common parent (`:user` in the above
-example). So, it's looking for `phone.user` and `address.user`. 
+example). So, it's looking for `phone.user` and `address.user`.
 
 Finally, it's comparing those values to make sure they match. In this case, if
 `phone.user` and `address.user` match, then the validation passes. If the phone and
@@ -245,7 +245,7 @@ Always skips over nil values; use `:presence` to validate those.
     # These two are the same, except `:now` produces a clearer error message:
     validates :finish_at, after: :now
     validates :finish_at, after: ->(r){ Time.now }
-    
+
     # Long versions, if you need to add extra validation options:
     validates :start_at, before: {value_of: :finish_at, message: "..." }
     validates :finish_at, after: {values_of: [:start_at, :alt_start_at], if: ... }
@@ -315,6 +315,11 @@ Default messages are as follows:
           after: "must be after %{attribute2}"
 
 
-## Compatibility ##
+## Contributing
 
-The current version is tested with Ruby 2.5-2.6 and ActiveModel 5.2-6.0.
+PRs are welcomed.
+
+
+## License
+
+MIT
