@@ -29,7 +29,7 @@ module ActiveModel::Validations
       is_valid &&= recipient !~ /\.\./
       is_valid &&= !recipient.starts_with?('.')
       is_valid &&= !recipient.ends_with?('.')
-      recipient.split('.').each do |segment|
+      recipient.split('.', -1).each do |segment|
         is_valid &&= segment =~ SEGMENT_REGEXP
       end
 
@@ -37,7 +37,7 @@ module ActiveModel::Validations
       if allow_unicode && defined?(Addressable::IDNA)
         domain &&= Addressable::IDNA.to_ascii(domain)
       end
-      labels = domain.split('.')
+      labels = domain.split('.', -1)
       is_valid &&= domain.length <= 255
       is_valid &&= domain !~ /\.\./
       is_valid &&= labels.size.in? 2..100
