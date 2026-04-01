@@ -7,6 +7,9 @@
 #     validates :database, url: {port: [5432, nil]}
 #       to allow scheme's default port, must specify `nil` too
 # :scheme defaults to `%w(http https)`
+#   to allow any, use `scheme: nil`
+#   to require blank, use `scheme: [nil]`
+#   note: to allow no scheme, uri must still start with '//'
 # :host defaults to `nil` which allows any
 # :port defaults to `nil` which allows any
 #   to require blank, use `port: false` or `port: [nil]`
@@ -26,6 +29,8 @@ module ActiveModel::Validations
           options[:scheme].call(record)
         elsif options[:scheme].is_a?(Symbol)
           record.send(options[:scheme])
+        elsif options.key?(:scheme) && options[:scheme].nil?
+          [u&.scheme]
         else
           Array.wrap(options[:scheme] || %w(http https))
         end
@@ -54,7 +59,7 @@ module ActiveModel::Validations
           Array.wrap(options[:port])
         end
 
-      if !u || !u2 || u.relative? || allowed_schemes.exclude?(u.scheme) || allowed_hosts.exclude?(u.host) || allowed_ports.exclude?(u.port)
+      if !u || !u2 || allowed_schemes.exclude?(u.scheme) || allowed_hosts.exclude?(u.host) || allowed_ports.exclude?(u.port)
         record.errors.add(attribute, :invalid_url, **options.merge(value: value, scheme: allowed_schemes, host: allowed_hosts, port: allowed_ports))
       end
     end
