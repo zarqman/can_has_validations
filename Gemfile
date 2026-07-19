@@ -12,3 +12,6 @@ gemspec
 
 # To use debugger
 # gem 'debugger'
+
+gem 'minitest-reporters'
+gem 'sqlite3'
